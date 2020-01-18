@@ -8,6 +8,8 @@ w = 23
 d = 4
 p = 16
 
+// TODO msgを引数にするのは廃止。渡す時点で個々の変数に分解して渡す（ループで何度も処理を通すのを避ける）
+
 // 処理のテスト用の関数（エントリー関連）
 function testEntry() {
   var msg = 'エントリー依頼\n2020/1/18\nテスト\nフル'
@@ -97,9 +99,9 @@ function reply(request, e) {
   }else if(request=="キャンセル依頼") {
     msgText = "キャンセルしました！"
   }else if(request=="参加者確認依頼") {
-    msgText = nameList
+    msgText = nameList.trim()
   }else if(request=="支払い確認依頼") {
-    msgText = moneyList.replace(/,/g, '円\n')
+    msgText = moneyList.replace(/,/g, '円\n').trim()
   }else if(request=="【今週末の練習") {
     msgText = "コート受付はYou！\n" + payerList + "\nよろしく！！"
   }
