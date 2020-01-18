@@ -1,5 +1,6 @@
 var now = new Date()
 var payerList = ""
+var moneyList
 
 // 処理のテスト用の関数（名前取得または会計取得）
 function testGetNmorMoney() {
@@ -86,6 +87,11 @@ function showMoney(sh, low, line) {
 //      moneyList += money + "\n"  //名称と時間を取得
 //    }
 //  }
-  Logger.log(money[7])
-  Logger.log(money.filter(function(value, index, self){ return self.indexOf(value) === index;}))
+  tempList = money.filter(function(e, index){
+    return !money.some(function(e2, index2){
+      return index > index2 && e[0] == e2[0] && e[1] == e2[1];
+    });
+  });
+  moneyList = tempList + ""
+  Logger.log(moneyList.replace(/,/g, '円\n'))
 }

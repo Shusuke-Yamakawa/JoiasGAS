@@ -76,7 +76,7 @@ function doPost(e) {
 function setSs(e) {
   var msg = e.message.text
   request = msg.slice(0,7)
-  if(request == "エントリー依頼" || request == "キャンセル依頼" || request == "参加者確認依頼"){
+  if(request == "エントリー依頼" || request == "キャンセル依頼" || request == "参加者確認依頼" || request == "支払い確認依頼"){
     for (var i=d; i<=p; i = i+6) {
       setEntry(request, msg, i)
     }
@@ -98,6 +98,8 @@ function reply(request, e) {
     msgText = "キャンセルしました！"
   }else if(request=="参加者確認依頼") {
     msgText = nameList
+  }else if(request=="支払い確認依頼") {
+    msgText = moneyList.replace(/,/g, '円\n')
   }else if(request=="【今週末の練習") {
     msgText = "コート受付はYou！\n" + payerList + "\nよろしく！！"
   }
