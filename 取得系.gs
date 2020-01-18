@@ -2,6 +2,16 @@ var now = new Date()
 var payerList = ""
 var moneyList
 
+function teeest() {
+  day = now.getDate()
+  month = now.getMonth()
+  if (day > 18) {
+    Logger.log(month+2)
+  }
+  Logger.log(day)
+  
+}  
+
 // 処理のテスト用の関数（名前取得または会計取得）
 function testGetNmorMoney() {
 //  var msg = '参加者確認依頼\n2020/1/18'
@@ -29,7 +39,6 @@ function testFunc() {
 }
 
 function showPayer(low) {
-  var msg = '【今週末の練習】\ndummy'
   var sh = ss.getSheetByName(now.getMonth() + 1 + '月管理表')
   // 最終行を取得
   lastRow = sh.getLastRow()
@@ -47,8 +56,22 @@ function showPayer(low) {
       }
     }
   }
+  // 見つからない場合、翌月と考え、翌月のシートを参照する（未テストなので、月末に確認する）
+  if (payerList == "") {
+    var sh = ss.getSheetByName(now.getMonth() + 2 + '月管理表')
+    var day = sh.getRange(4, low).getValue() // スプシの日付
+    var d1 = new Date(day) // スプレッドシートの日付
+    var payer = sh.getRange(36, low+1).getValue()
+    if (payer != "") {
+          payerList += GetDayOfWeek(d1.getDay()) + payer + "\n"
+          payerList += sh.getRange(36, low+3).getValue() + "\n"
+          payerList += "コート代：" + sh.getRange(9, low+4).getValue() + "円" + "\n"
+      }
+  }
   Logger.log(payerList)
 }
+
+
 
 // 曜日の取得 date型にgetDayした引数を連携
 function GetDayOfWeek(dayOfWeek) {
