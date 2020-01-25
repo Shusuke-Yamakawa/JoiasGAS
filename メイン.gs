@@ -1,35 +1,4 @@
-var ss = SpreadsheetApp.getActiveSpreadsheet()
-// 参加者確認依頼で使用
-var nameList = ""
-// 支払い確認依頼で使用
-var moneyList = ""
-// 列を定数化
-w = 23
-d = 4
-p = 16
-
 // TODO msgを引数にするのは廃止。渡す時点で個々の変数に分解して渡す（ループで何度も処理を通すのを避ける）
-
-// 処理のテスト用の関数（エントリー関連）
-function testEntry() {
-  var msg = 'エントリー依頼\n2020/1/18\nテスト\nフル'
-  Logger.log(msg.slice(0,7))
-  
-  var request = msg.slice(0,7)
-  var month = msg.match(/\/[0-9]+\//)[0].replace('/', '').replace('/', '')
-  Logger.log(month)
-  var sh = ss.getSheetByName(month + '月管理表')
-  var date = msg.match(/\n[0-9]+\/[0-9]+\/[0-9]+/)[0].replace('\n', '').replace('\n', '')
-//  sh.getRange(45,w).setValue(date)
-  var name = msg.match(/\n\D+\n/)[0].replace('\n', '').replace('\n', '')
-//  sh.getRange(46,w).setValue(name)
-  var time = msg.slice(-2)
-//  sh.getRange(47,w).setValue(time)
-  
-  for (var i=d; i<=p; i = i+6) {
-    setEntry(request, msg, i)
-  }
-}  
 
 // エントリー処理のメイン処理
 function setEntry(request, msg, low) {
@@ -77,7 +46,7 @@ function doPost(e) {
 
 function setSs(e) {
   var msg = e.message.text
-  request = msg.slice(0,7)
+  var request = msg.slice(0,7)
   if(request == "エントリー依頼" || request == "キャンセル依頼" || request == "参加者確認依頼" || request == "支払い確認依頼"){
     for (var i=d; i<=p; i = i+6) {
       setEntry(request, msg, i)
@@ -86,6 +55,21 @@ function setSs(e) {
   } else if(request == "【今週末の練習"){
     for (var i=d; i<=p; i = i+6) {
       showPayer(i)
+    }
+    reply(request, e)
+  }
+  
+  var month = msg.match(/\n[0-9]+/)[0].replace('\n', '')
+  var sh = ss.getSheetByName(month + '月管理表')
+  var lastRow = sh.getLastRow()
+  if(request == "全参加者を取得"){
+    for (var i=5; i<=lastRow; i = i+40) {
+      getPlayerAll(i, sh)
+    }
+    reply(request, e)
+  } else if(request == "月別運営費取得"){
+    for (var i=35; i<=lastRow; i = i+40) {
+      getManageMoney(i, sh)
     }
     reply(request, e)
   }
@@ -104,6 +88,10 @@ function reply(request, e) {
     msgText = moneyList.replace(/,/g, '円\n').trim()
   }else if(request=="【今週末の練習") {
     msgText = "コート受付はYou！\n" + payerList + "\nよろしく！！"
+  }else if(request=="全参加者を取得") {
+    msgText = nameListAll.trim()
+  }else if(request=="月別運営費取得") {
+    msgText = manageMoneyList + "月合計：" + sumManageMoney + "円"
   }
   
   var message = {
