@@ -1,13 +1,13 @@
 // TODO msgを引数にするのは廃止。渡す時点で個々の変数に分解して渡す（ループで何度も処理を通すのを避ける）
 
 // エントリー処理のメイン処理
-function setEntry(request, msg, low) {
+function setEntry(request, msg, column) {
   var month = msg.match(/\/[0-9]+\//)[0].replace('/', '').replace('/', '')
   var sh = ss.getSheetByName(month + '月管理表')
   // 最終行を取得
   lastRow = sh.getLastRow()
   for (var i=4; i<=lastRow; i = i+40) {
-    var day = sh.getRange(i, low).getValue() // スプシの日付を取得
+    var day = sh.getRange(i, column).getValue() // スプシの日付を取得
     var d1 = new Date(day) // Dateを作成
     var date = msg.match(/\n[0-9]+\/[0-9]+\/[0-9]+/)[0].replace('\n', '').replace('\n', '') //msgの日付を取得
     var d2 = new Date(date) // Dateを作成
@@ -15,13 +15,15 @@ function setEntry(request, msg, low) {
     var result = dt / (1000 * 60 * 60 * 24) // １日のミリ秒数で割り算
     if (result == '1') {
       if (request == "エントリー依頼"){
-        setNmTime(sh, msg, low, i+7)
+        setNmTime(sh, msg, column, i+7)
       }else if (request == "キャンセル依頼"){
-        cancelNmTime(sh, msg, low, i+7)
+        cancelNmTime(sh, msg, column, i+7)
       }else if (request == "参加者確認依頼"){
-        showEntry(sh, low, i+7)
+        showEntry(sh, column, i+7)
       }else if (request == "支払い確認依頼"){
-        showMoney(sh, low, i+7)
+        showMoney(sh, column, i+7)
+      }else if (request == "中止後処理依頼"){
+        removeManageMoney(sh, column, i)
       }
     }
   }
@@ -39,7 +41,7 @@ function doPost(e) {
     } else if(event.type == "follow") {
       follow(event);
     } else if(event.type == "unfollow") {
-      unFollow(event);
+      unfollow(event);
     }
  });
 }
@@ -47,7 +49,7 @@ function doPost(e) {
 function setSs(e) {
   var msg = e.message.text
   var request = msg.slice(0,7)
-  if(request == "エントリー依頼" || request == "キャンセル依頼" || request == "参加者確認依頼" || request == "支払い確認依頼"){
+  if(request == "エントリー依頼" || request == "キャンセル依頼" || request == "参加者確認依頼" || request == "支払い確認依頼" || request == "中止後処理依頼"){
     for (var i=d; i<=p; i = i+6) {
       setEntry(request, msg, i)
     }
@@ -79,9 +81,17 @@ function setSs(e) {
 function reply(request, e) {
   var msgText = ""
   if (request=="エントリー依頼") {
-    msgText = "エントリーしました！"
+    if (capacityOver) {
+      msgText = "定員オーバーしているか練習日ではありません。\nスプレッドシートを確認ください。"
+    }else{
+      msgText = "エントリーしました！"
+    }
   }else if(request=="キャンセル依頼") {
-    msgText = "キャンセルしました！"
+    if (cancelMiss) {
+      msgText = "キャンセル対象が見つかりません。\n日付か名前が間違っていないか確認ください。"
+    }else{
+      msgText = "キャンセルしました！"
+    }
   }else if(request=="参加者確認依頼") {
     msgText = nameList.trim()
   }else if(request=="支払い確認依頼") {
@@ -92,6 +102,8 @@ function reply(request, e) {
     msgText = nameListAll.trim()
   }else if(request=="月別運営費取得") {
     msgText = manageMoneyList + "月合計：" + sumManageMoney + "円"
+  }else if(request=="中止後処理依頼") {
+    msgText = "中止処理を行いました"
   }
   
   var message = {
@@ -122,6 +134,6 @@ function follow(e) {
 }
 
 /* アンフォローされた時の処理 */
-function unFollow(e){
+function unfollow(e){
   
 }

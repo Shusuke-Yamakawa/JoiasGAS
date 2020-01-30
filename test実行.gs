@@ -8,6 +8,8 @@ var moneyList
 var nameListAll = ""
 var manageMoneyList = ""
 var sumManageMoney = 0
+var capacityOver = false
+var cancelMiss = true
 // 列を定数化
 d = 4
 h = 8
@@ -17,17 +19,32 @@ w = 23
 
 // ただの設定用の関数
 function teeest() {
-  var test = "10"
-  var test2 = "20"
-  var test3 = parseInt(test) + parseInt(test2)
-  Logger.log(test3)
+  var sh = ss.getSheetByName('2月管理表')
+  var capacity = sh.getRange(10, 5).getValue()
+  var sumPlayer = sh.getRange(33, 5).getValue()
+  if (capacity == ""){
+    capacityOver = true
+    return
+  }
+  if (parseInt(sumPlayer) >= parseInt(capacity)){
+    capacityOver = true
+    return
+    if (capacityOver) {
+      Logger.log("定員オーバーだぞ")
+    }
+    
+  }
+//  var test3 = parseInt(test) + parseInt(test2)
+  Logger.log(capacity)
+  Logger.log(sumPlayer)
+  Logger.log(capacityOver)
   
 }  
 
 
 // 処理のテスト用の関数（エントリー関連）
 function testEntry() {
-  var msg = 'エントリー依頼\n2020/2/8\nテスト\nフル'
+  var msg = 'エントリー依頼\n2020/2/2\nテスト\nフル'
   Logger.log(msg.slice(0,7))
   
   var request = msg.slice(0,7)
@@ -44,6 +61,7 @@ function testEntry() {
   for (var i=d; i<=p; i = i+6) {
     setEntry(request, msg, i)
   }
+  Logger.log(capacityOver)
 }  
 
 // 処理のテスト用の関数（名前取得または会計取得）
@@ -102,3 +120,20 @@ function testManageMoney() {
 //    getPlayerAll(i, sh)
 //  }
 }
+
+// 中止処理のテスト
+function testCancel() {
+  var msg = '中止後処理依頼\n2020/2/1'
+  Logger.log(msg.slice(0,7))
+  
+  var request = msg.slice(0,7)
+  var month = msg.match(/\/[0-9]+\//)[0].replace('/', '').replace('/', '')
+  Logger.log(month)
+  var sh = ss.getSheetByName(month + '月管理表')
+  var date = msg.match(/\n[0-9]+\/[0-9]+\/[0-9]+/)[0].replace('\n', '').replace('\n', '')
+  Logger.log(date)
+  
+  for (var i=d; i<=p; i = i+6) {
+    setEntry(request, msg, i)
+  }
+}  
