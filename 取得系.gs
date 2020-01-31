@@ -10,23 +10,27 @@ function showPayer(column) {
     if (result < '4') {
       var payer = sh.getRange(i+32, column+1).getValue()
       if (payer != "") {
-          payerList += GetDayOfWeek(d1.getDay()) + payer + "\n"
+          payerList += "\n"+ GetDayOfWeek(d1.getDay()) + payer + "\n"
           payerList += sh.getRange(i+32, column+2).getValue() + "\n"
           payerList += "コート代：" + sh.getRange(i+5, column+4).getValue() + "円" + "\n"
       }
     }
   }
-  // 見つからない場合、翌月と考え、翌月のシートを参照する（未テストなので、月末に確認する）
+  // 見つからない場合、翌月と考え、翌月のシートを参照する
   if (payerList == "") {
     var sh = ss.getSheetByName(now.getMonth() + 2 + '月管理表')
-    var day = sh.getRange(4, column).getValue() // スプシの日付
-    var d1 = new Date(day) // スプレッドシートの日付
-    var payer = sh.getRange(36, column+1).getValue()
-    if (payer != "") {
-          payerList += GetDayOfWeek(d1.getDay()) + payer + "\n"
-          payerList += sh.getRange(36, column+3).getValue() + "\n"
-          payerList += "コート代：" + sh.getRange(9, column+4).getValue() + "円" + "\n"
+    for (var column=d; column<=p; column = column+6) {
+      for (var i=4; i<=lastRow; i = i+40) {
+        var day = sh.getRange(i, column).getValue() // スプシの日付
+        var d1 = new Date(day) // スプレッドシートの日付
+        var payer = sh.getRange(i+32, column+1).getValue()
+        if (payer != "") {
+          payerList += "\n"+ GetDayOfWeek(d1.getDay()) + payer + "\n"
+          payerList += sh.getRange(i+32, column+2).getValue() + "\n"
+          payerList += "コート代：" + sh.getRange(i+5, column+4).getValue() + "円" + "\n"
+        }
       }
+    }
   }
   Logger.log(payerList)
 }
