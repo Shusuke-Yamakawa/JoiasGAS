@@ -2,17 +2,20 @@ function showPayer(column) {
   var sh = ss.getSheetByName(now.getMonth() + 1 + '月管理表')
   // 最終行を取得
   lastRow = sh.getLastRow()
-  for (var i=4; i<=lastRow; i = i+40) {
-    var day = sh.getRange(i, column).getValue() // スプシの日付
-    var d1 = new Date(day) // スプレッドシートの日付
-    var dt = Math.abs(d1.getTime() - now.getTime()) // ミリ秒数値を引き算
-    var result = dt / (1000 * 60 * 60 * 24) // １日のミリ秒数で割り算
-    if (result < '4') {
-      var payer = sh.getRange(i+32, column+1).getValue()
-      if (payer != "") {
+  for (var i=4; i<=lastRow; i=i+40) {
+    var d1 = new Date(sh.getRange(i, column).getValue()) // スプレッドシートの日付
+    var nowDate = new Date()
+    for (var j=0; j<5; j++){
+      var findDate = new Date(nowDate.getYear(), nowDate.getMonth(), nowDate.getDate() + j)
+      var dt = Math.abs(d1.getTime() - findDate.getTime()) // ミリ秒数値を引き算
+      var result = dt / (1000 * 60 * 60 * 24) // １日のミリ秒数で割り算
+      if (result == '0') {
+        var payer = sh.getRange(i+32, column+1).getValue()
+        if (payer != "") {
           payerList += "\n"+ GetDayOfWeek(d1.getDay()) + payer + "\n"
           payerList += sh.getRange(i+32, column+2).getValue() + "\n"
           payerList += "コート代：" + sh.getRange(i+5, column+4).getValue() + "円" + "\n"
+        }
       }
     }
   }
