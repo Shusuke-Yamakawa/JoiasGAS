@@ -19,8 +19,8 @@ function showPayer(column) {
       }
     }
   }
-  // 見つからない場合、翌月と考え、翌月のシートを参照する
-  if (payerList == "") {
+  // 27日以降は翌月のシートも参照する
+  if (nowDate.getDate() > 26) {
     var sh = ss.getSheetByName(now.getMonth() + 2 + '月管理表')
     for (var column=d; column<=p; column = column+6) {
       for (var i=4; i<=lastRow; i = i+40) {
