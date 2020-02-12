@@ -44,7 +44,7 @@ function teeest() {
 
 // 処理のテスト用の関数（エントリー関連）
 function testEntry() {
-  var msg = 'エントリー依頼\n2020/2/2\nテスト\nフル'
+  var msg = 'キャンセル依頼\n2020/2/29\nしゅう\n13-17'
   Logger.log(msg.slice(0,7))
   
   var request = msg.slice(0,7)
@@ -66,8 +66,8 @@ function testEntry() {
 
 // 処理のテスト用の関数（名前取得または会計取得）
 function testGetNmorMoney() {
-//  var msg = '参加者確認依頼\n2020/1/18'
-  var msg = '支払い確認依頼\n2020/1/11'
+  var msg = '参加者確認依頼\n2020/2/8'
+//  var msg = '支払い確認依頼\n2020/1/11'
   Logger.log(msg.slice(0,7))
   
   var request = msg.slice(0,7)

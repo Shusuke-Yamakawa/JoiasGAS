@@ -82,7 +82,7 @@ function reply(request, e) {
   var msgText = ""
   if (request=="エントリー依頼") {
     if (capacityOver) {
-      msgText = "定員オーバーしているか練習日ではありません。\nスプレッドシートを確認ください。"
+      msgText = "定員オーバーしているか練習日ではありません。\nスプレッドシートor設定した日付を確認ください。"
     }else{
       msgText = "エントリーしました！"
     }

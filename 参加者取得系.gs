@@ -1,5 +1,13 @@
 // 参加者を取得する
 function showEntry(sh, column, row) {
+  if (nameList.indexOf('定員') == -1){
+    nameList += "◆定員 " + sh.getRange(row-4, column+1).getValue() + "：" + sh.getRange(row-1, column+1).getValue() + "名\n"
+    nameList += "☆参加者 " + sh.getRange(row-4, column+1).getValue() + "：" + sh.getRange(row+22, column+1).getValue() + "名\n"
+    if (sh.getRange(row-1, column+2).getValue() != ""){
+      nameList += "◆定員 " + sh.getRange(row-4, column+2).getValue() + "：" + sh.getRange(row-1, column+2).getValue() + "名\n"
+      nameList += "☆参加者 " + sh.getRange(row-4, column+2).getValue() + "：" + sh.getRange(row+22, column+2).getValue() + "名\n"
+    }
+  }
   for (var i=row; i<=row+21; i++) {
     if (sh.getRange(i, column).getValue() != "") {
       var name = sh.getRange(i, column).getValue()
