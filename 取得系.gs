@@ -28,7 +28,7 @@ function showPayer(column) {
         var d1 = new Date(day) // スプレッドシートの日付
         var payer = sh.getRange(i+32, column+1).getValue()
         if (payer != "") {
-          payerList += "\n"+ GetDayOfWeek(d1.getDay()) + payer + "\n"
+          payerList += "\n"+ GetDayOfWeek(d1.getDay()) + "\n" + payer + "\n\n"
           payerList += sh.getRange(i+32, column+2).getValue() + "\n"
           payerList += "コート代：" + sh.getRange(i+5, column+4).getValue() + "円" + "\n"
         }
