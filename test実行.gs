@@ -4,7 +4,7 @@ var nameList = ""
 // 支払い確認依頼で使用
 now = new Date()
 var payerList = ""
-var moneyList
+var moneyList = ""
 var nameListAll = ""
 var manageMoneyList = ""
 var sumManageMoney = 0
@@ -66,16 +66,14 @@ function testEntry() {
 
 // 処理のテスト用の関数（名前取得または会計取得）
 function testGetNmorMoney() {
-  var msg = '参加者確認依頼\n2020/2/8'
-//  var msg = '支払い確認依頼\n2020/1/11'
+//  var msg = '参加者確認依頼\n2020/2/8'
+  var msg = '支払い確認依頼\n2020/3/15'
   Logger.log(msg.slice(0,7))
   
   var request = msg.slice(0,7)
   var month = msg.match(/\/[0-9]+\//)[0].replace('/', '').replace('/', '')
-  Logger.log(month)
   var sh = ss.getSheetByName(month + '月管理表')
   var date = msg.match(/\n[0-9]+\/[0-9]+\/[0-9]+/)[0].replace('\n', '').replace('\n', '')
-  Logger.log(date)
   
   for (var i=d; i<=p; i = i+6) {
     setEntry(request, msg, i)

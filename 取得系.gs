@@ -10,12 +10,7 @@ function showPayer(column) {
       var dt = Math.abs(d1.getTime() - findDate.getTime()) // ミリ秒数値を引き算
       var result = dt / (1000 * 60 * 60 * 24) // １日のミリ秒数で割り算
       if (result == '0') {
-        var payer = sh.getRange(i+32, column+1).getValue()
-        if (payer != "") {
-          payerList += "\n"+ GetDayOfWeek(d1.getDay()) + "\n" + payer + "\n\n"
-          payerList += sh.getRange(i+32, column+2).getValue() + "\n"
-          payerList += "コート代：" + sh.getRange(i+5, column+4).getValue() + "円" + "\n"
-        }
+        setRole(sh, i, column, d1);
       }
     }
   }
@@ -26,16 +21,29 @@ function showPayer(column) {
       for (var i=4; i<=lastRow; i = i+40) {
         var day = sh.getRange(i, column).getValue() // スプシの日付
         var d1 = new Date(day) // スプレッドシートの日付
-        var payer = sh.getRange(i+32, column+1).getValue()
-        if (payer != "") {
-          payerList += "\n"+ GetDayOfWeek(d1.getDay()) + "\n" + payer + "\n\n"
-          payerList += sh.getRange(i+32, column+2).getValue() + "\n"
-          payerList += "コート代：" + sh.getRange(i+5, column+4).getValue() + "円" + "\n"
-        }
+        setRole(sh, i, column, d1);
       }
     }
   }
   Logger.log(payerList)
+}
+
+function setRole(sh, i, column, d1) {
+  var payer = sh.getRange(i+32, column+1).getValue()
+  if (payer != "") {
+    payerList += "\n"
+    payerList += d1.getDate()-1 + GetDayOfWeek(d1.getDay()) + "\n"
+    payerList += "☆コート受付\n" + payer + "\n\n★コート名義\n"
+    payerList += sh.getRange(i+32, column+2).getValue() + "\n"
+    payerList += "★コート代：" + sh.getRange(i+5, column+4).getValue() + "円" + "\n\n"
+    payerList += "☆練習管理\n" + "  " + sh.getRange(i+33, column+1).getValue() + "\n"
+    payerList += "☆かごボ\n" + "  " + sh.getRange(i+34, column+1).getValue() + "\n"
+    payerList += "☆NEWボ\n" + "  " + sh.getRange(i+35, column+1).getValue() + "\n"
+    payerList += "☆会計\n" + "  " + sh.getRange(i+36, column+1).getValue() + "\n"
+    payerList += "☆開催判断\n" + "  " + sh.getRange(i+37, column+1).getValue() + "\n\n"
+    showMoney(sh, column, i+7)
+    payerList += "★参加費\n" + moneyList.replace(/,/g, '円\n').trim() + "\n"
+  }
 }
 
 // 曜日の取得 date型にgetDayした引数を連携
@@ -54,20 +62,20 @@ function showMoney(sh, column, row) {
   var columnMoney = column+4
   Logger.log(row)
   Logger.log(columnMoney)
-  var money = sh.getRange(row, columnMoney, 21, 1).getValues()
-//  for (var i=row; i<=row+21; i++) {
-//    if (sh.getRange(i, column).getValue() != "") {
-//      money = sh.getRange(i, column+4).getValue()
-//      moneyList += money + "\n"  //名称と時間を取得
-//    }
-//  }
-  tempList = money.filter(function(e, index){
-    return !money.some(function(e2, index2){
-      return index > index2 && e[0] == e2[0] && e[1] == e2[1];
-    });
+  var tempList = [];
+  for (var i=row; i<=row+21; i++) {
+    if (sh.getRange(i, column).getValue() != "") {
+      money = sh.getRange(i, column+4).getValue()
+      tempList.push(money)
+    }
+  }
+  var newArray = tempList.filter(function (x, i, self) {
+    return self.indexOf(x) === i;
   });
-  moneyList = tempList + ""
-  Logger.log(moneyList.replace(/,/g, '円\n'))
+  for(var i=0; i<newArray.length; i=i+1){
+    moneyList += newArray[i] + "円\n"
+  }
+  Logger.log(moneyList)
 }
 
 // 月単位の運営費を全取得する

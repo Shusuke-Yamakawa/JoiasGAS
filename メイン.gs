@@ -97,7 +97,7 @@ function reply(request, e) {
   }else if(request=="支払い確認依頼") {
     msgText = moneyList.replace(/,/g, '円\n').trim()
   }else if(request=="【今週末の練習") {
-    msgText = "コート受付はYou！\n" + payerList + "\nよろしく！！"
+    msgText = "役割は以下の通りだ！\n" + payerList + "\nコメアツ！！"
   }else if(request=="全参加者を取得") {
     msgText = nameListAll.trim()
   }else if(request=="月別運営費取得") {
