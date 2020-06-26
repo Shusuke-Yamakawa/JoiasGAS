@@ -16,8 +16,10 @@ function setEntry(request, msg, column) {
     if (result == '1') {
       if (request == "エントリー依頼"){
         setNmTime(sh, msg, column, i+7)
+        showMoney(sh, column, i+7)
       }else if (request == "キャンセル依頼"){
         cancelNmTime(sh, msg, column, i+7)
+        showMoney(sh, column, i+7)
       }else if (request == "参加者確認依頼"){
         showEntry(sh, column, i+7)
       }else if (request == "支払い確認依頼"){
@@ -84,18 +86,18 @@ function reply(request, e) {
     if (capacityOver) {
       msgText = "定員オーバーしているか練習日ではありません。\nスプレッドシートor設定した日付を確認ください。"
     }else{
-      msgText = "エントリーしました！"
+      msgText = "エントリーしました！\n\n☆参加費変動結果☆\n" + moneyList.trim()
     }
   }else if(request=="キャンセル依頼") {
     if (cancelMiss) {
       msgText = "キャンセル対象が見つかりません。\n日付か名前が間違っていないか確認ください。"
     }else{
-      msgText = "キャンセルしました！"
+      msgText = "キャンセルしました！\n\n☆参加費変動結果☆\n" + moneyList.trim()
     }
   }else if(request=="参加者確認依頼") {
     msgText = nameList.trim()
   }else if(request=="支払い確認依頼") {
-    msgText = moneyList.replace(/,/g, '円\n').trim()
+    msgText = moneyList.trim()
   }else if(request=="【今週末の練習") {
     msgText = "役割は以下の通りだ！\n" + payerList + "\nコメアツ！！"
   }else if(request=="全参加者を取得") {

@@ -5,7 +5,7 @@ function showPayer(column) {
   for (var i=4; i<=lastRow; i=i+40) {
     var d1 = new Date(sh.getRange(i, column).getValue()) // スプレッドシートの日付
     var nowDate = new Date()
-    for (var j=0; j<5; j++){
+    for (var j=0; j<7; j++){
       var findDate = new Date(nowDate.getYear(), nowDate.getMonth(), nowDate.getDate() + j)
       var dt = Math.abs(d1.getTime() - findDate.getTime()) // ミリ秒数値を引き算
       var result = dt / (1000 * 60 * 60 * 24) // １日のミリ秒数で割り算
@@ -33,6 +33,12 @@ function setRole(sh, i, column, d1) {
   if (payer != "") {
     payerList += "\n"
     payerList += d1.getDate()-1 + GetDayOfWeek(d1.getDay()) + "\n"
+    // コート名と時間
+    payerList += sh.getRange(i+1, column).getValue() + " "
+    payerList += sh.getRange(i+3, column+1).getValue() + " "
+    payerList += sh.getRange(i+3, column+2).getValue() + " "
+    payerList += sh.getRange(i+3, column+3).getValue() + "\n" + "\n"
+    
     payerList += "☆コート受付\n" + payer + "\n\n★コート名義\n"
     payerList += sh.getRange(i+32, column+2).getValue() + "\n"
     payerList += "★コート代：" + sh.getRange(i+5, column+4).getValue() + "円" + "\n\n"
