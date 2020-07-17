@@ -104,7 +104,7 @@ function testPlayerAll() {
 
 // 指定した月の金額を取得
 function testManageMoney() {
-  const msg = '月別運営費取得\n1月'
+  const msg = '月別運営費取得\n6月'
   Logger.log(msg.slice(0,7))
   var month = msg.match(/\n[0-9]+/)[0].replace('\n', '')
   var sh = ss.getSheetByName(month + '月管理表')

@@ -70,7 +70,7 @@ function showMoney(sh, column, row) {
   Logger.log(columnMoney)
   var tempList = [];
   for (var i=row; i<=row+21; i++) {
-    if (sh.getRange(i, column).getValue() != "") {
+    if (sh.getRange(i, column+4).getValue() != "") {
       money = sh.getRange(i, column+4).getValue()
       tempList.push(money)
     }
