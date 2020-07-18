@@ -4,18 +4,16 @@ function showPayer(column) {
   lastRow = sh.getLastRow()
   for (var i=4; i<=lastRow; i=i+40) {
     var d1 = new Date(sh.getRange(i, column).getValue()) // スプレッドシートの日付
-    var nowDate = new Date()
-    for (var j=0; j<7; j++){
-      var findDate = new Date(nowDate.getYear(), nowDate.getMonth(), nowDate.getDate() + j)
-      var dt = Math.abs(d1.getTime() - findDate.getTime()) // ミリ秒数値を引き算
-      var result = dt / (1000 * 60 * 60 * 24) // １日のミリ秒数で割り算
-      if (result == '0') {
+    var momD1 = Moment.moment(sh.getRange(i, column).getValue()).subtract(1,'days') // スプレッドシートの日付
+    for (var j=0; j<9; j++){
+      var findDate = Moment.moment().add(j,'days')
+      if (momD1.isSame(findDate,'day')) {
         setRole(sh, i, column, d1);
       }
     }
   }
   // 27日以降は翌月のシートも参照する
-  if (nowDate.getDate() > 26) {
+  if (new Date().getDate() > 26) {
     var sh = ss.getSheetByName(now.getMonth() + 2 + '月管理表')
     for (var column=d; column<=p; column = column+6) {
       for (var i=4; i<=lastRow; i = i+40) {
